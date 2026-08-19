@@ -1,4 +1,4 @@
-import br.com.simulado.agenterag.AgenteRagApplication;
+import br.com.agenterag.AgenteRagApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.modulith.core.ApplicationModules;
 
