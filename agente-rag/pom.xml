@@ -19,7 +19,7 @@
 
     <properties>
         <java.version>21</java.version>
-        <langchain4j.version>1.1.0</langchain4j.version>
+        <langchain4j.version>1.2.0</langchain4j.version>
         <spring-modulith.version>2.1.0</spring-modulith.version>
     </properties>
 
@@ -65,19 +65,19 @@
             <artifactId>ojdbc11</artifactId>
         </dependency>
 
-        <!-- LangChain4j -->
+        <!-- LangChain4j core e módulos -->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j</artifactId>
         </dependency>
         <dependency>
             <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j-open-ai</artifactId>
+            <artifactId>langchain4j-core</artifactId>
         </dependency>
+
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-google-ai-gemini</artifactId>
-            <version>1.1.0-rc1</version>
         </dependency>
 
         <!-- Spring Modulith -->
@@ -144,5 +144,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
