@@ -1,4 +1,4 @@
-package br.com.arthur.agenterag.ingestion.internal;
+package br.com.arthur.agenterag.core.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

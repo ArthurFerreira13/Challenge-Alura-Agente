@@ -1,4 +1,4 @@
-package br.com.arthur.agenterag.ingestion;
+package br.com.arthur.agenterag.ingestion.dto;
 
 public record ExtracaoResponse(
         String nomeArquivo,

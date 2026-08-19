@@ -1,6 +1,6 @@
-package br.com.arthur.agenterag.ingestion;
+package br.com.arthur.agenterag.ingestion.dto;
 
-import br.com.arthur.agenterag.ingestion.internal.Documento;
+import br.com.arthur.agenterag.core.domain.Documento;
 
 import java.time.Instant;
 

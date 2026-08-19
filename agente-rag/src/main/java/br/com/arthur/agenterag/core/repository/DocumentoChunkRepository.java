@@ -1,5 +1,6 @@
-package br.com.arthur.agenterag.ingestion.internal;
+package br.com.arthur.agenterag.core.repository;
 
+import br.com.arthur.agenterag.core.domain.DocumentoChunk;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

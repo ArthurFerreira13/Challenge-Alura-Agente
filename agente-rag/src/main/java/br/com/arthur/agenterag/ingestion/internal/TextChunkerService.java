@@ -1,4 +1,4 @@
-package br.com.arthur.agenterag.ingestion;
+package br.com.arthur.agenterag.ingestion.internal;
 
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentSplitter;

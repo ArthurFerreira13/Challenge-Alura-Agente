@@ -1,8 +1,12 @@
-package br.com.arthur.agenterag.ingestion;
+package br.com.arthur.agenterag.ingestion.service;
 
-import br.com.arthur.agenterag.ingestion.internal.Documento;
-import br.com.arthur.agenterag.ingestion.internal.DocumentoChunk;
-import br.com.arthur.agenterag.ingestion.internal.DocumentoChunkRepository;
+import br.com.arthur.agenterag.core.domain.Documento;
+import br.com.arthur.agenterag.core.domain.DocumentoChunk;
+import br.com.arthur.agenterag.core.repository.DocumentoChunkRepository;
+import br.com.arthur.agenterag.core.repository.DocumentoRepository;
+import br.com.arthur.agenterag.ingestion.dto.DocumentoResponse;
+import br.com.arthur.agenterag.ingestion.internal.DocumentExtractor;
+import br.com.arthur.agenterag.ingestion.internal.TextChunkerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

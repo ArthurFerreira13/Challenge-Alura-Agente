@@ -1,5 +1,7 @@
-package br.com.arthur.agenterag.ingestion;
+package br.com.arthur.agenterag.ingestion.controller;
 
+import br.com.arthur.agenterag.ingestion.dto.DocumentoResponse;
+import br.com.arthur.agenterag.ingestion.service.IngestionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,8 @@ public class IngestionController {
     @PostMapping("/api/ingestao/extrair-texto")
     public ResponseEntity<DocumentoResponse> extrairTexto(@RequestParam("arquivo") MultipartFile arquivo) {
         DocumentoResponse resposta = ingestionService.extrairTexto(arquivo);
+        log.info("Recebido arquivo: {}, tamanho: {}", arquivo.getOriginalFilename(), arquivo.getSize());
+
         return ResponseEntity.ok(resposta);
     }
 

@@ -1,7 +1,7 @@
-package br.com.arthur.agenterag.ingestion;
+package br.com.arthur.agenterag.ingestion.service;
 
-import br.com.arthur.agenterag.ingestion.internal.DocumentoChunk;
-import br.com.arthur.agenterag.ingestion.internal.DocumentoChunkRepository;
+import br.com.arthur.agenterag.core.domain.DocumentoChunk;
+import br.com.arthur.agenterag.core.repository.DocumentoChunkRepository;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;

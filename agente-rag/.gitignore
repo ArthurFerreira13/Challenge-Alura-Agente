@@ -30,3 +30,21 @@ out/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Spring Boot (configurações locais)
+application-local.yml
+application-dev.yml
+application-test.yml
+*.properties.local
+
+# Temp files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Test coverage
+.idea/coverage/
+
+# Docker (configurações locais)
+docker-compose.override.yml

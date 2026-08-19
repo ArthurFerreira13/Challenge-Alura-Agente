@@ -2,13 +2,13 @@ spring:
   application:
     name: agente-rag
   datasource:
-    url: jdbc:oracle:thin:@${ORACLE_TNS_ALIAS:agenterag_high}?TNS_ADMIN=${TNS_ADMIN:/opt/oracle/wallet}
-    username: ${ORACLE_DB_USER:agente_rag}
-    password: ${ORACLE_DB_PASSWORD:}
+    url: jdbc:oracle:thin:@localhost:1521/FREEPDB1
+    username: SYSTEM
+    password: Senha123
     driver-class-name: oracle.jdbc.OracleDriver
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.OracleDialect
@@ -25,13 +25,14 @@ management:
     health:
       show-details: always
 
-# Configuração do provedor de embeddings / chat (LangChain4j)
+# Configuração global do LangChain4j na raiz do YAML
 langchain4j:
-  open-ai:
-    api-key: ${OPENAI_API_KEY:}
-    chat-model: gpt-4o-mini
-    embedding-model: text-embedding-3-small
+  google-ai-gemini:
+    api-key: AQ.Ab8RN6Ln-sxUHdLdWnj9Dy0ZVyUEyxts690Hukxmf0ugbj4qMA
+    chat-model: gemini-2.5-flash
+    embedding-model:  gemini-embedding-001
 
+# Configurações específicas da sua aplicação
 agente-rag:
   ingestao:
     diretorio-documentos: classpath:documentos/

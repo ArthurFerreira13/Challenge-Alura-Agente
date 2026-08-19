@@ -1,4 +1,4 @@
-package br.com.arthur.agenterag.ingestion;
+package br.com.arthur.agenterag.ingestion.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
