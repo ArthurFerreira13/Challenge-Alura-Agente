@@ -1,4 +1,4 @@
-package br.com.agenterag.retrieval.dto;
+package br.com.agenterag.retrieval;
 
 import java.util.List;
 

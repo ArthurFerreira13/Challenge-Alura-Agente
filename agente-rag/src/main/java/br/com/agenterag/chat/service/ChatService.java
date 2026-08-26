@@ -1,6 +1,6 @@
 package br.com.agenterag.chat.service;
 
-import br.com.agenterag.retrieval.service.ConsultaService;
+import br.com.agenterag.retrieval.ConsultaService;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.ChatMemory;

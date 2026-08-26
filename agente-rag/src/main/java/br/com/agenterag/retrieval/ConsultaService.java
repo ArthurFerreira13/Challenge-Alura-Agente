@@ -1,7 +1,6 @@
-package br.com.agenterag.retrieval.service;
+package br.com.agenterag.retrieval;
 import br.com.agenterag.core.domain.DocumentoChunk;
 import br.com.agenterag.core.repository.DocumentoChunkRepository;
-import br.com.agenterag.retrieval.dto.ConsultaResponse;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
