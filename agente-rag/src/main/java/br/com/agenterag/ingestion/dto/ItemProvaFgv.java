@@ -5,4 +5,7 @@ public record ItemProvaFgv(
         String urlPdf,
         boolean isGabarito
 ) {
+    public boolean ehGabarito() {
+        return isGabarito;
+    }
 }

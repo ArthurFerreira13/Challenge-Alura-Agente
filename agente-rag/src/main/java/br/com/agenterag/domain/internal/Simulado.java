@@ -9,6 +9,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -35,5 +36,13 @@ public class Simulado {
 
     public void setQuestoes(List<Questao> questoesExtraidas) {
         this.questoes = questoesExtraidas;
+    }
+
+    public String getId() {
+        return id.toString();
+    }
+
+    public List<Questao> getQuestoes() {
+        return questoes;
     }
 }

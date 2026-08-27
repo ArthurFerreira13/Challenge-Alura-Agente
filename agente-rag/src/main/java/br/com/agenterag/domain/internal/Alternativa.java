@@ -25,4 +25,16 @@ public class Alternativa {
     @ManyToOne
     @JoinColumn(name = "questao_id")
     private Questao questao;
+
+    public void setLetra(String s) {
+        this.letra = s;
+    }
+
+    public void setTexto(String texto) {
+        this.texto = texto;
+    }
+
+    public void setQuestao(Questao questao) {
+        this.questao = questao;
+    }
 }
