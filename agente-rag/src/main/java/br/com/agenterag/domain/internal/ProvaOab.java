@@ -38,8 +38,20 @@ public class ProvaOab {
     @OneToMany(mappedBy = "provaOrigem", cascade = CascadeType.ALL)
     private List<Questao> questoes = new ArrayList<>();
 
+    public Long getId() {
+        return id;
+    }
+
     public void setEdicao(String edicao) {
         this.edicao = edicao;
+    }
+
+    public List<Questao> getQuestoes() {
+        return questoes;
+    }
+
+    public String getNomeArquivo() {
+        return nomeArquivo;
     }
 
     public void setNomeArquivo(String nomeArquivo) {
@@ -54,4 +66,3 @@ public class ProvaOab {
         this.status = statusIngestao;
     }
 }
-

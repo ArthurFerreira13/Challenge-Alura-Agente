@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class SimuladoOrchestratorService {
@@ -39,6 +40,16 @@ public class SimuladoOrchestratorService {
     @Transactional
     public Simulado ingerirEGerarSimulado(String edicao, String nomeArquivo,
                                           byte[] pdfProvaBytes, byte[] pdfGabaritoBytes) {
+
+        Optional<ProvaOab> provaExistente = provaRepository.findByNomeArquivo(nomeArquivo);
+        if (provaExistente.isPresent()) {
+            ProvaOab jaProcessada = provaExistente.get();
+            log.info("Prova '{}' (arquivo '{}') já processada anteriormente (ID {}), ignorando reingestão.",
+                    edicao, nomeArquivo, jaProcessada.getId());
+            return jaProcessada.getQuestoes().isEmpty()
+                    ? null
+                    : jaProcessada.getQuestoes().get(0).getSimulado();
+        }
 
         ProvaOab prova = new ProvaOab();
         prova.setEdicao(edicao);
@@ -67,6 +78,7 @@ public class SimuladoOrchestratorService {
             }
 
             q.setAlternativaCorreta(correta);
+            q.setDisciplina(DisciplinaMapper.paraQuestao(q.getNumeroQuestao()));
             q.setProvaOrigem(prova);
             q.setSimulado(simulado);
 
