@@ -143,6 +143,7 @@ public class PdfParserService {
         Questao questao = new Questao();
         questao.setNumeroQuestao(numero);
         questao.setEnunciado(enunciado);
+        questao.setDisciplina(DisciplinaMapper.paraQuestao(numero));
 
         List<Alternativa> alternativas = new ArrayList<>();
         for (int i = 0; i < letras.size(); i++) {

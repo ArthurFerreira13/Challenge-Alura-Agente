@@ -3,6 +3,8 @@ package br.com.agenterag.domain.internal;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,14 +25,15 @@ public class Questao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer numeroQuestao; // Ex: 1
+    private Integer numeroQuestao;
 
     @Lob
     @Column(name = "enunciado")
     private String enunciado;
 
-    @Column(length = 100)
-    private String disciplina; // Ex: "Direito Constitucional", "Direito Penal"
+    @Enumerated(EnumType.STRING)
+    @Column(length = 50)
+    private Disciplina disciplina;
 
     @ManyToOne
     @JoinColumn(name = "prova_origem_id")
@@ -44,7 +47,7 @@ public class Questao {
     private List<Alternativa> alternativas = new ArrayList<>();
 
     @Column(name = "alternativa_correta", length = 1)
-    private String alternativaCorreta; // Ex: "A", "B", "C", "D"
+    private String alternativaCorreta;
 
     public Long getId() {
         return id;
@@ -66,11 +69,11 @@ public class Questao {
         this.enunciado = enunciado;
     }
 
-    public String getDisciplina() {
+    public Disciplina getDisciplina() {
         return disciplina;
     }
 
-    public void setDisciplina(String disciplina) {
+    public void setDisciplina(Disciplina disciplina) {
         this.disciplina = disciplina;
     }
 
