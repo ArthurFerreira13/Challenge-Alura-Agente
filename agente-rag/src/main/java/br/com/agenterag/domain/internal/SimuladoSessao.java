@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 @Entity
 @Table(name = "simulado_sessao")
 public class SimuladoSessao {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -47,6 +49,43 @@ public class SimuladoSessao {
 
     @OneToMany(mappedBy = "sessao", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RespostaUsuario> respostas = new ArrayList<>();
+
+    // --- MÉTODOS DE REGRAS DE TEMPO / CONTAGEM ---
+
+    /**
+     * Retorna o momento exato em que a sessão deve expirar.
+     */
+    public LocalDateTime getDataHoraExpiracao() {
+        if (iniciadoEm == null || simulado == null) {
+            return null;
+        }
+        return iniciadoEm.plusMinutes(simulado.getTempoLimiteMinutos());
+    }
+
+    /**
+     * Calcula o tempo restante em segundos. Retorna 0 caso já tenha expirado ou finalizado.
+     */
+    public long getTempoRestanteSegundos(LocalDateTime agora) {
+        if (status != StatusSessao.EM_ANDAMENTO || iniciadoEm == null || simulado == null) {
+            return 0;
+        }
+
+        LocalDateTime expiracao = getDataHoraExpiracao();
+        long segundosRestantes = Duration.between(agora, expiracao).getSeconds();
+        return Math.max(0, segundosRestantes);
+    }
+
+    /**
+     * Verifica se o tempo limite do simulado já foi ultrapassado em relação ao horário informado.
+     */
+    public boolean isExpirada(LocalDateTime agora) {
+        if (status != StatusSessao.EM_ANDAMENTO || iniciadoEm == null || simulado == null) {
+            return false;
+        }
+        return agora.isAfter(getDataHoraExpiracao());
+    }
+
+    // --- GETTERS E SETTERS TRADICIONAIS ---
 
     public Long getId() {
         return id;
@@ -102,5 +141,9 @@ public class SimuladoSessao {
 
     public List<RespostaUsuario> getRespostas() {
         return respostas;
+    }
+
+    public Long getSimuladoId() {
+        return simulado.getId();
     }
 }

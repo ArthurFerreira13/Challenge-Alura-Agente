@@ -1,6 +1,7 @@
 package br.com.agenterag.domain.service;
 
 import br.com.agenterag.domain.exception.QuestaoNaoPertenceAoSimuladoException;
+import br.com.agenterag.domain.exception.SessaoExpiradaException;
 import br.com.agenterag.domain.exception.SessaoJaFinalizadaException;
 import br.com.agenterag.domain.exception.SessaoNaoEncontradaException;
 import br.com.agenterag.domain.internal.Questao;
@@ -39,6 +40,13 @@ public class RespostaSimuladoService {
 
         if (sessao.getStatus() != StatusSessao.EM_ANDAMENTO) {
             throw new SessaoJaFinalizadaException(sessaoId);
+        }
+
+        LocalDateTime agora = LocalDateTime.now(clock);
+        if (sessao.isExpirada(agora)) {
+            sessao.setStatus(StatusSessao.EXPIRADA);
+            sessaoRepository.save(sessao);
+            throw new SessaoExpiradaException(sessaoId);
         }
 
         Questao questao = sessao.getSimulado().getQuestoes().stream()

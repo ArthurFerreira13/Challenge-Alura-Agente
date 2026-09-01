@@ -26,12 +26,28 @@ public class Alternativa {
     @JoinColumn(name = "questao_id")
     private Questao questao;
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getLetra() {
+        return letra;
+    }
+
     public void setLetra(String s) {
         this.letra = s;
     }
 
+    public String getTexto() {
+        return texto;
+    }
+
     public void setTexto(String texto) {
         this.texto = texto;
+    }
+
+    public Questao getQuestao() {
+        return questao;
     }
 
     public void setQuestao(Questao questao) {
