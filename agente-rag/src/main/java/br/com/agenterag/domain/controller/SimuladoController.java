@@ -6,7 +6,6 @@ import br.com.agenterag.domain.dto.ResponderRequest;
 import br.com.agenterag.domain.dto.ResultadoSimuladoResponse;
 import br.com.agenterag.domain.dto.SessaoResponse;
 import br.com.agenterag.domain.dto.SimuladoResumoResponse;
-import br.com.agenterag.domain.exception.ErroResponse;
 import br.com.agenterag.domain.exception.SessaoNaoEncontradaException;
 import br.com.agenterag.domain.exception.SimuladoNaoEncontradoException;
 import br.com.agenterag.domain.internal.ResultadoSimulado;
@@ -20,9 +19,6 @@ import br.com.agenterag.domain.service.SimuladoSessaoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -115,34 +110,5 @@ public class SimuladoController {
     public ResponseEntity<ResultadoSimuladoResponse> apurar(@PathVariable Long sessaoId) {
         ResultadoSimulado resultado = apuracaoResultadoService.apurar(sessaoId);
         return ResponseEntity.ok(ResultadoSimuladoResponse.from(resultado));
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErroResponse> handleSessaoNaoEncontrada(IllegalArgumentException ex) {
-        return responder(HttpStatus.NOT_FOUND, ex.getMessage());
-    }
-
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<ErroResponse> handleSessaoJaConcluida(IllegalStateException ex) {
-        return responder(HttpStatus.CONFLICT, ex.getMessage());
-    }
-
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErroResponse> handleCorpoRequisicaoAusenteOuInvalido(HttpMessageNotReadableException ex) {
-        return responder(HttpStatus.BAD_REQUEST, "O corpo da requisição é obrigatório e deve ser um JSON válido.");
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErroResponse> handleValidacaoAtributos(MethodArgumentNotValidException ex) {
-        String mensagem = ex.getBindingResult().getFieldErrors().stream()
-                .findFirst()
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                .orElse("Dados de requisição inválidos.");
-        return responder(HttpStatus.BAD_REQUEST, mensagem);
-    }
-
-    private ResponseEntity<ErroResponse> responder(HttpStatus status, String mensagem) {
-        return ResponseEntity.status(status)
-                .body(new ErroResponse(status.value(), mensagem, LocalDateTime.now(clock)));
     }
 }

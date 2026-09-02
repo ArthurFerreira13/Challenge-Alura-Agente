@@ -2,6 +2,8 @@ package br.com.agenterag.domain.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -27,6 +29,12 @@ public class GlobalExceptionHandler {
         return responder(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    // NOVO — vai aqui, junto dos outros "não encontrado"
+    @ExceptionHandler(QuestaoNaoEncontradaException.class)
+    public ResponseEntity<ErroResponse> handleNaoEncontrado(QuestaoNaoEncontradaException ex) {
+        return responder(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
     @ExceptionHandler(QuestaoNaoPertenceAoSimuladoException.class)
     public ResponseEntity<ErroResponse> handleConflito(QuestaoNaoPertenceAoSimuladoException ex) {
         return responder(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
@@ -37,10 +45,27 @@ public class GlobalExceptionHandler {
         return responder(HttpStatus.CONFLICT, ex.getMessage());
     }
 
+    @ExceptionHandler(SessaoExpiradaException.class)
+    public ResponseEntity<ErroResponse> handleExpirada(SessaoExpiradaException ex) {
+        return responder(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErroResponse> handleCorpoRequisicaoAusenteOuInvalido(HttpMessageNotReadableException ex) {
+        return responder(HttpStatus.BAD_REQUEST, "O corpo da requisição é obrigatório e deve ser um JSON válido.");
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErroResponse> handleValidacaoAtributos(MethodArgumentNotValidException ex) {
+        String mensagem = ex.getBindingResult().getFieldErrors().stream()
+                .findFirst()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .orElse("Dados de requisição inválidos.");
+        return responder(HttpStatus.BAD_REQUEST, mensagem);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErroResponse> handleInesperado(Exception ex) {
-        // nunca devolve ex.getMessage() aqui — mensagem genérica pro cliente,
-        // detalhe real vai só pro log (evita vazar stacktrace/detalhe interno)
         return responder(HttpStatus.INTERNAL_SERVER_ERROR, "Erro inesperado ao processar a solicitação.");
     }
 

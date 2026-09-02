@@ -7,6 +7,6 @@
  * domain.internal é oculto por convenção de nome do Spring Modulith.
  */
 @org.springframework.modulith.ApplicationModule(
-        allowedDependencies = {"core"}
+        allowedDependencies = {"core", "ingestion"}
 )
 package br.com.agenterag.domain;

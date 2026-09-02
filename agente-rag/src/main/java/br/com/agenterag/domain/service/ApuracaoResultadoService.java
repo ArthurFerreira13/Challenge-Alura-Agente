@@ -1,5 +1,7 @@
 package br.com.agenterag.domain.service;
 
+import br.com.agenterag.domain.exception.SessaoJaFinalizadaException;
+import br.com.agenterag.domain.exception.SessaoNaoEncontradaException;
 import br.com.agenterag.domain.internal.DesempenhoPorDisciplina;
 import br.com.agenterag.domain.internal.Disciplina;
 import br.com.agenterag.domain.internal.Questao;
@@ -21,15 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * Fecha uma sessão de simulado: cruza as respostas do usuário com o gabarito
- * de cada questão, calcula acertos/erros/em branco (globais e por disciplina)
- * e persiste o ResultadoSimulado correspondente.
- *
- * API pública do módulo domain — é aqui que outros módulos (ex.: o
- * orquestrador de simulados) devem chamar; as entidades e repositórios
- * usados internamente continuam em domain.internal.
- */
 @Service
 public class ApuracaoResultadoService {
 
@@ -42,9 +35,9 @@ public class ApuracaoResultadoService {
     private final Clock clock;
 
     public ApuracaoResultadoService(SimuladoSessaoRepository sessaoRepository,
-                                     RespostaUsuarioRepository respostaRepository,
-                                     ResultadoSimuladoRepository resultadoRepository,
-                                     Clock clock) {
+                                    RespostaUsuarioRepository respostaRepository,
+                                    ResultadoSimuladoRepository resultadoRepository,
+                                    Clock clock) {
         this.sessaoRepository = sessaoRepository;
         this.respostaRepository = respostaRepository;
         this.resultadoRepository = resultadoRepository;
@@ -53,15 +46,11 @@ public class ApuracaoResultadoService {
 
     @Transactional
     public ResultadoSimulado apurar(Long sessaoId) {
-        // Lock pessimista: bloqueia a linha da sessão até o commit desta transação,
-        // evitando que duas chamadas concorrentes (double-click, retry, evento
-        // duplicado) passem pela checagem de status ao mesmo tempo e gerem dois
-        // ResultadoSimulado para a mesma sessão.
         SimuladoSessao sessao = sessaoRepository.findByIdParaAtualizar(sessaoId)
-                .orElseThrow(() -> new IllegalArgumentException("Sessão não encontrada: " + sessaoId));
+                .orElseThrow(() -> new SessaoNaoEncontradaException(sessaoId));
 
         if (sessao.getStatus() == StatusSessao.CONCLUIDO) {
-            throw new IllegalStateException("Sessão já concluída: " + sessaoId);
+            throw new SessaoJaFinalizadaException(sessaoId);
         }
 
         List<RespostaUsuario> respostas = respostaRepository.findBySessaoId(sessaoId);
@@ -100,14 +89,12 @@ public class ApuracaoResultadoService {
 
         sessao.setStatus(StatusSessao.CONCLUIDO);
         sessao.setConcluidoEm(LocalDateTime.now(clock));
-        sessaoRepository.save(sessao); // explícito: não depende do dirty checking sobreviver a um refactor
+        sessaoRepository.save(sessao);
 
         try {
             return resultadoRepository.save(resultado);
         } catch (DataIntegrityViolationException e) {
-            // Segunda linha de defesa caso o lock pessimista não esteja disponível
-            // (ex.: banco/dialect sem suporte) e a constraint unique do banco pegue a corrida.
-            throw new IllegalStateException("Sessão já foi apurada: " + sessaoId, e);
+            throw new SessaoJaFinalizadaException(sessaoId);
         }
     }
 
@@ -128,7 +115,6 @@ public class ApuracaoResultadoService {
         return desempenho;
     }
 
-    /** Resultado individual de uma questão: usado só para alimentar os agregados via stream. */
     private record ResultadoQuestao(Disciplina disciplina, boolean respondida, boolean acertou) {
     }
 }

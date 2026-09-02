@@ -27,8 +27,9 @@ public class SimuladoSessao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "usuario_id", nullable = false)
-    private Long usuarioId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "simulado_id", nullable = false)
@@ -52,9 +53,6 @@ public class SimuladoSessao {
 
     // --- MÉTODOS DE REGRAS DE TEMPO / CONTAGEM ---
 
-    /**
-     * Retorna o momento exato em que a sessão deve expirar.
-     */
     public LocalDateTime getDataHoraExpiracao() {
         if (iniciadoEm == null || simulado == null) {
             return null;
@@ -62,22 +60,15 @@ public class SimuladoSessao {
         return iniciadoEm.plusMinutes(simulado.getTempoLimiteMinutos());
     }
 
-    /**
-     * Calcula o tempo restante em segundos. Retorna 0 caso já tenha expirado ou finalizado.
-     */
     public long getTempoRestanteSegundos(LocalDateTime agora) {
         if (status != StatusSessao.EM_ANDAMENTO || iniciadoEm == null || simulado == null) {
             return 0;
         }
-
         LocalDateTime expiracao = getDataHoraExpiracao();
         long segundosRestantes = Duration.between(agora, expiracao).getSeconds();
         return Math.max(0, segundosRestantes);
     }
 
-    /**
-     * Verifica se o tempo limite do simulado já foi ultrapassado em relação ao horário informado.
-     */
     public boolean isExpirada(LocalDateTime agora) {
         if (status != StatusSessao.EM_ANDAMENTO || iniciadoEm == null || simulado == null) {
             return false;
@@ -85,18 +76,18 @@ public class SimuladoSessao {
         return agora.isAfter(getDataHoraExpiracao());
     }
 
-    // --- GETTERS E SETTERS TRADICIONAIS ---
+    // --- GETTERS E SETTERS ---
 
     public Long getId() {
         return id;
     }
 
-    public Long getUsuarioId() {
-        return usuarioId;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setUsuarioId(Long usuarioId) {
-        this.usuarioId = usuarioId;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public Simulado getSimulado() {
@@ -144,6 +135,10 @@ public class SimuladoSessao {
     }
 
     public Long getSimuladoId() {
-        return simulado.getId();
+        return simulado != null ? simulado.getId() : null;
+    }
+
+    public Long getUsuarioId() {
+        return usuario != null ? usuario.getId() : null;
     }
 }
