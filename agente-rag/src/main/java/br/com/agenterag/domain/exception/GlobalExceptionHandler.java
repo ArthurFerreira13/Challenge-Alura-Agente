@@ -1,5 +1,7 @@
 package br.com.agenterag.domain.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -12,6 +14,8 @@ import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     private final Clock clock;
 
@@ -29,7 +33,6 @@ public class GlobalExceptionHandler {
         return responder(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
-    // NOVO — vai aqui, junto dos outros "não encontrado"
     @ExceptionHandler(QuestaoNaoEncontradaException.class)
     public ResponseEntity<ErroResponse> handleNaoEncontrado(QuestaoNaoEncontradaException ex) {
         return responder(HttpStatus.NOT_FOUND, ex.getMessage());
@@ -66,7 +69,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErroResponse> handleInesperado(Exception ex) {
+        log.error("Erro inesperado processando requisição", ex);
         return responder(HttpStatus.INTERNAL_SERVER_ERROR, "Erro inesperado ao processar a solicitação.");
+    }
+
+    @ExceptionHandler(br.com.agenterag.domain.exception.EmailJaCadastradoException.class)
+    public ResponseEntity<ErroResponse> handleConflito(br.com.agenterag.domain.exception.EmailJaCadastradoException ex) {
+        return responder(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(br.com.agenterag.domain.exception.UsuarioNaoEncontradoException.class)
+    public ResponseEntity<ErroResponse> handleNaoEncontrado(br.com.agenterag.domain.exception.UsuarioNaoEncontradoException ex) {
+        return responder(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     private ResponseEntity<ErroResponse> responder(HttpStatus status, String mensagem) {

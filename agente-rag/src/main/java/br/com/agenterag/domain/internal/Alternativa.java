@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -19,7 +20,8 @@ public class Alternativa {
     @Column(length = 1)
     private String letra; // "A", "B", "C", "D"
 
-    @Column(name = "texto", length = 2000)
+    @Lob
+    @Column(name = "texto")
     private String texto;
 
     @ManyToOne

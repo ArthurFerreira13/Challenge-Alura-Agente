@@ -1,4 +1,4 @@
- /*package br.com.agenterag.domain.service;
+package br.com.agenterag.domain.service;
 
 import br.com.agenterag.domain.dto.ExameFonte;
 import br.com.agenterag.domain.dto.ResultadoIngestao;
@@ -85,13 +85,11 @@ public class BatchIngestionService {
 
             if (simulado.getQuestoes().isEmpty()) {
                 return ResultadoIngestao.falha(exame.edicao(),
-                        "Ingestão rodou sem erro, mas 0 questões foram salvas (provável falha de parsing)");
+                        "Ingestão rodou sem erro, mas 0 questões foram salvas (provável falha de parsing ou gabarito)");
             }
 
             return ResultadoIngestao.sucesso(exame.edicao(), simulado.getQuestoes().size());
 
-        } catch (PdfParserService.TextoIlegivelException e) {
-            return ResultadoIngestao.falha(exame.edicao(), "PDF ilegível: " + e.getMessage());
         } catch (Exception e) {
             // Captura ampla de propósito: qualquer falha (download, parsing,
             // banco) não pode derrubar o processamento dos outros exames do lote.
@@ -156,4 +154,4 @@ public class BatchIngestionService {
                 .forEach(r -> log.info("  FALHOU: {} — {}", r.edicao(), r.mensagem()));
         log.info("=====================================");
     }
-} */
+}

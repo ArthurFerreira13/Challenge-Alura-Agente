@@ -5,4 +5,5 @@ import java.util.Optional;
 
 public interface AnotacaoQuestaoRepository extends JpaRepository<AnotacaoQuestao, Long> {
     Optional<AnotacaoQuestao> findByUsuarioIdAndQuestaoId(Long usuarioId, Long questaoId);
+    void deleteAllByUsuarioId(Long usuarioId);
 }

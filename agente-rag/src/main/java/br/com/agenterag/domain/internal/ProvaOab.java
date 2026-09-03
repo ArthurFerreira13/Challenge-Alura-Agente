@@ -27,8 +27,11 @@ public class ProvaOab {
     private String edicao; // Ex: "XXXVIII Exame de Ordem"
     private String nomeArquivo;
 
+    @Column(name = "ano")  // <-- ADICIONADO
+    private Integer ano;   // <-- ADICIONADO
+
     @Lob
-    private byte[] conteudoPdf; // Removido o columnDefinition para compatibilidade com Oracle
+    private byte[] conteudoPdf;
 
     @Enumerated(EnumType.STRING)
     private StatusIngestao status; // PENDENTE, PROCESSADO, ERRO
@@ -38,16 +41,18 @@ public class ProvaOab {
     @OneToMany(mappedBy = "provaOrigem", cascade = CascadeType.ALL)
     private List<Questao> questoes = new ArrayList<>();
 
+    // Getters e Setters
+
     public Long getId() {
         return id;
     }
 
-    public void setEdicao(String edicao) {
-        this.edicao = edicao;
+    public String getEdicao() {
+        return edicao;
     }
 
-    public List<Questao> getQuestoes() {
-        return questoes;
+    public void setEdicao(String edicao) {
+        this.edicao = edicao;
     }
 
     public String getNomeArquivo() {
@@ -58,11 +63,39 @@ public class ProvaOab {
         this.nomeArquivo = nomeArquivo;
     }
 
+    public Integer getAno() {              // <-- ADICIONADO
+        return ano;
+    }
+
+    public void setAno(Integer ano) {      // <-- ADICIONADO
+        this.ano = ano;
+    }
+
+    public byte[] getConteudoPdf() {
+        return conteudoPdf;
+    }
+
     public void setConteudoPdf(byte[] conteudoPdf) {
         this.conteudoPdf = conteudoPdf;
     }
 
+    public StatusIngestao getStatus() {
+        return status;
+    }
+
     public void setStatus(StatusIngestao statusIngestao) {
         this.status = statusIngestao;
+    }
+
+    public LocalDateTime getCriadoEm() {
+        return criadoEm;
+    }
+
+    public void setCriadoEm(LocalDateTime criadoEm) {
+        this.criadoEm = criadoEm;
+    }
+
+    public List<Questao> getQuestoes() {
+        return questoes;
     }
 }

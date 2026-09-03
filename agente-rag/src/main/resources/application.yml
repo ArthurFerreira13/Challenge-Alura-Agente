@@ -8,13 +8,14 @@ spring:
     driver-class-name: oracle.jdbc.OracleDriver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update   # ALTERADO: recria o banco do zero (drop + create)
     properties:
       hibernate:
         dialect: org.hibernate.dialect.OracleDialect
 
 server:
   port: 8080
+
 logging:
   level:
     org.hibernate.SQL: DEBUG
@@ -29,14 +30,12 @@ management:
     health:
       show-details: always
 
-# Configuração global do LangChain4j na raiz do YAML
 langchain4j:
   google-ai-gemini:
     api-key: AQ.Ab8RN6Ln-sxUHdLdWnj9Dy0ZVyUEyxts690Hukxmf0ugbj4qMA
     chat-model: gemini-3.6-flash
-    embedding-model:  gemini-embedding-001
+    embedding-model: gemini-embedding-001
 
-# Configurações específicas da sua aplicação
 agente-rag:
   ingestao:
     diretorio-documentos: classpath:documentos/
